@@ -1,0 +1,45 @@
+.ant-card-hoverable:hover {
+  box-shadow: unset !important;
+}
+.ant-card .ant-card-body {
+  padding: 0;
+  border: none;
+}
+.ant-card.ant-card-bordered {
+  border: none;
+}
+.card-film .info-film {
+  transition: all 0.5s;
+}
+.card-film:hover .info-film {
+  display: none;
+  opacity: 0;
+}
+.card-film:hover .btn-buyticket {
+  display: block;
+  opacity: 1;
+}
+.btn-buyticket {
+  margin-top: 10px;
+  opacity: 0;
+  display: none;
+  transition: all 0.5s;
+}
+.card-film:hover .overlay {
+  display: block;
+}
+.overlay {
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #000 5%, rgba(0, 0, 0, 0.1));
+}
+.playVideoYoutube {
+  display: none !important;
+}
+.card-film:hover .playVideoYoutube {
+  display: block !important;
+}
+.playVideoYoutube:hover {
+  opacity: 0.8 !important;
+}

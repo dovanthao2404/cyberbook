@@ -1,0 +1,57 @@
+.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab,
+.ant-collapse-item {
+  padding: 14px 24px !important;
+}
+.ant-collapse-item {
+  background-color: #fff;
+}
+.ant-collapse-content-box,
+.ant-collapse-header {
+  padding: 0 !important;
+}
+
+.ant-tabs-left > .ant-tabs-nav .ant-tabs-tab + .ant-tabs-tab {
+  margin: 0 !important;
+  position: relative;
+}
+/* ,
+.ant-collapse-item::before */
+.ant-tabs-nav .ant-tabs-tab::before {
+  content: "";
+  display: block;
+  width: 70%;
+  height: 2px;
+  position: absolute;
+  bottom: 0;
+  background-color: #f0f0f0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ant-tabs-nav .ant-tabs-tab:nth-last-child()::before {
+  content: none;
+}
+
+.ant-tabs-nav-list,
+.ant-tabs-content {
+  max-height: 468px;
+  overflow: auto;
+}
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations {
+  display: none !important;
+}
+.ant-collapse-header {
+  background-color: white !important;
+}
+.ant-tabs-tabpane {
+  padding: 0 !important;
+}
+.ant-tabs-tabpane .ant-collapse-content {
+  border: none;
+}
+.ant-collapse > .ant-collapse-item {
+  border-bottom: none;
+  position: relative;
+}
+.ant-tabs-tabpane .ant-collapse {
+  border: none;
+}

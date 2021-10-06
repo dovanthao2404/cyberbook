@@ -1,0 +1,19 @@
+.homeMovie-title {
+  font-size: 18px;
+  margin: 0 10px;
+  cursor: pointer;
+
+  transition: all 0.5s;
+  font-weight: bold;
+}
+.homeMovie-title.active {
+  color: #fa5238;
+  font-size: 24px;
+  cursor: default;
+}
+.homeMovie-title:hover {
+  font-size: 24px;
+}
+.slick-arrow::before {
+  content: none;
+}
