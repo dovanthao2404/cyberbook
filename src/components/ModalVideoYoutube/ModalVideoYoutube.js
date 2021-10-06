@@ -2,9 +2,7 @@ import React, { useState } from "react";
 
 import { CloseCircleOutlined } from "@ant-design/icons";
 
-const ModalVideoYoutube = () => {
-  const [isOpen, setOpen] = useState(false);
-
+const ModalVideoYoutube = (props) => {
   return (
     <div
       style={{
@@ -15,7 +13,7 @@ const ModalVideoYoutube = () => {
         zIndex: "9999999",
         boxShadow: "",
       }}
-      className={`${isOpen ? "block" : "hidden"}`}
+      className={`${props.isOpen ? "block" : "hidden"}`}
     >
       <div
         style={{
@@ -26,20 +24,24 @@ const ModalVideoYoutube = () => {
           <CloseCircleOutlined
             className="text-4xl text-white cursor-pointer"
             onClick={() => {
-              setOpen(false);
+              props.setOpen(false);
             }}
           />
         </div>
       </div>
-      <iframe
-        width={560 * 1.5}
-        height={315 * 1.5}
-        src="https://www.youtube.com/embed/zEWSSod0zTY"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      {props.isOpen ? (
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed?v=LFoEV2xyHrw"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

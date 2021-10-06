@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "antd";
 import "./CardFilm.css";
 import { NavLink } from "react-router-dom";
@@ -56,7 +56,7 @@ export default function CardFilm(props) {
                     zIndex: 5,
                     cursor: "pointer",
                   }}
-                  onClick={() => props.setOpenProps()}
+                  onClick={() => props.setOpen(true, film.trailer)}
                   src="https://tix.vn/app/assets/img/icons/play-video.png"
                   alt="anh video"
                 />
@@ -99,7 +99,7 @@ export default function CardFilm(props) {
                       display: "inline-block",
                     }}
                     className="w-full text-center py-2 text-white rounded-md hover:text-white "
-                    to="/detail/:id"
+                    to={`/detail/${film.maPhim}`}
                   >
                     MUA VÉ
                   </NavLink>

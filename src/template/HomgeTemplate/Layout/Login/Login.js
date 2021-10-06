@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Form, Input } from "antd";
-
+import "./Login.css";
 const Login = () => {
   const [visibleModalSignIn, setVisibleModalSignIn] = useState(false);
   const [visibleModalSignUp, setVisibleModalSignUp] = useState(false);
@@ -57,10 +57,6 @@ const Login = () => {
           </>
         }
         visible={visibleModalSignIn}
-        onOk={handleOkSignIn}
-        onCancel={handleCancel}
-        okText="Đăng nhập"
-        cancelText="Hủy"
       >
         <Form
           name="basic"
@@ -71,10 +67,20 @@ const Login = () => {
         >
           <Form.Item label="Tên đăng nhập" name="taiKhoan">
             <Input />
+            <span className="text-red-500">Tài khoản phải từ 6-24 kí tự</span>
           </Form.Item>
 
           <Form.Item label="Mật khẩu" name="matKhau">
             <Input.Password />
+            <span className="text-red-500">Mật khẩu từ 8 đến 32 ký tự</span>
+          </Form.Item>
+          <Form.Item label="Click Here">
+            <button
+              type="submit"
+              className="py-2 px-4 bg-yellow-700 hover:bg-yellow-800 text-white rounded-lg"
+            >
+              Đăng Nhập
+            </button>
           </Form.Item>
         </Form>
       </Modal>
@@ -127,6 +133,14 @@ const Login = () => {
 
           <Form.Item label="Nhập lại mật khẩu">
             <Input.Password name="rePassword" />
+          </Form.Item>
+          <Form.Item label="Click Here">
+            <button
+              type="submit"
+              className="py-2 px-4 bg-yellow-700 hover:bg-yellow-800 text-white rounded-lg"
+            >
+              Đăng Ký
+            </button>
           </Form.Item>
         </Form>
       </Modal>
