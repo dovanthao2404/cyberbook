@@ -1,8 +1,47 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { signOutAction } from "../../../../redux/actions/ManagementUserActions";
+import { USER_LOGIN } from "../../../../utils/setting/config";
 import ModalLogin from "../ModalLogin/ModalLogin";
 
 export default function Header(props) {
+  const dispatch = useDispatch();
+  const { userLogin } = useSelector((state) => state.managementUserReducer);
+
+  const handleSingOut = () => {
+    dispatch(signOutAction());
+  };
+  const handleRanderLogin = () => {
+    const userLoginLocal = JSON.parse(localStorage.getItem(USER_LOGIN));
+    let userLoginCurrent = {};
+    if (userLoginLocal && Object.keys(userLoginLocal).length > 0) {
+      userLoginCurrent = userLoginLocal;
+    }
+    userLoginCurrent = userLogin;
+
+    if (Object.keys(userLoginCurrent).length > 0) {
+      return (
+        <div className="flex items-center">
+          <NavLink to="/profile">
+            <div className="flex mr-2 items-center">
+              <img
+                style={{ borderRadius: "50%" }}
+                src="https://picsum.photos/30/30"
+                alt={userLoginCurrent?.name}
+              />
+              {userLoginCurrent.taiKhoan}
+            </div>
+          </NavLink>
+          <NavLink to="/" className="ml-2" onClick={handleSingOut}>
+            <div>Đăng xuất</div>
+          </NavLink>
+        </div>
+      );
+    }
+
+    return <ModalLogin />;
+  };
   return (
     <header
       className="bg-white text-coolGray-800 "
@@ -61,7 +100,7 @@ export default function Header(props) {
           </li>
         </ul>
         <div className="items-center flex-shrink-0 hidden lg:flex">
-          <ModalLogin />
+          {handleRanderLogin()}
         </div>
         <button className="p-4 lg:hidden">
           <svg
