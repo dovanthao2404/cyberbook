@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import Login from "../Login/Login";
+import ModalLogin from "../ModalLogin/ModalLogin";
 
-export default function Header() {
+export default function Header(props) {
   return (
     <header
       className="bg-white text-coolGray-800 "
@@ -61,7 +61,7 @@ export default function Header() {
           </li>
         </ul>
         <div className="items-center flex-shrink-0 hidden lg:flex">
-          <Login />
+          <ModalLogin />
         </div>
         <button className="p-4 lg:hidden">
           <svg
