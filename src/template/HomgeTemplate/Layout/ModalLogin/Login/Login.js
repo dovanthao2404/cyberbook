@@ -2,10 +2,21 @@ import React, { useState } from "react";
 import { Modal, Form, Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "../../../../../redux/actions/ManagementUserActions";
+import { SET_ERROR_LOGIN } from "../../../../../redux/constants/ManagementUserConstants";
+import {
+  openModalSignInAction,
+  openModalSignUpAction,
+  closeModalSignInAction,
+} from "../../../../../redux/actions/ModalActions";
 
-export default function SignUp(props) {
+export default function Login(props) {
   const dispatch = useDispatch();
   const { errorLogin } = useSelector((state) => state.managementUserReducer);
+
+  const { isOpenSignIn, isOpenSignUp } = useSelector(
+    (state) => state.modalReducer
+  );
+
   const [info, setInfo] = useState({
     taiKhoan: "",
     matKhau: "",
@@ -17,6 +28,7 @@ export default function SignUp(props) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    resetError();
     setError({
       ...error,
       [name]: "",
@@ -25,6 +37,10 @@ export default function SignUp(props) {
       ...info,
       [name]: value,
     });
+  };
+
+  const resetError = () => {
+    dispatch({ type: SET_ERROR_LOGIN, payload: null });
   };
 
   const handleOnBlur = (e) => {
@@ -40,6 +56,11 @@ export default function SignUp(props) {
         setError({
           ...error,
           [name]: "Vui lòng nhập từ 6 đến 24 ký tự",
+        });
+      } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
+        setError({
+          ...error,
+          [name]: "Tài khoản gồm chữ và số",
         });
       } else {
         setError({
@@ -68,9 +89,25 @@ export default function SignUp(props) {
   };
   const checkValid = () => {
     let isValid = false;
-
     if (info.taiKhoan && info.matKhau && !error.taiKhoan && !error.matKhau) {
       isValid = true;
+    } else {
+      if (info.taiKhoan === "" && info.matKhau === "") {
+        setError({
+          taiKhoan: "Vui lòng nhập vào tài khoản",
+          matKhau: "Vui lòng nhập vào mật khẩu",
+        });
+      } else if (info.matKhau === "") {
+        setError({
+          ...error,
+          matKhau: "Vui lòng nhập vào mật khẩu",
+        });
+      } else if (info.taiKhoan === "") {
+        setError({
+          ...error,
+          taiKhoan: "Vui lòng nhập vào tài khoản",
+        });
+      }
     }
     return isValid;
   };
@@ -87,20 +124,35 @@ export default function SignUp(props) {
           <>
             <span
               className="text-blue-400 mr-3 cursor-pointer"
-              onClick={props.setVisibleModalSignIn}
+              onClick={() => {
+                dispatch(openModalSignInAction());
+              }}
             >
               Đăng nhập
             </span>
             <span
               className="cursor-pointer"
-              onClick={props.setVisibleModalSignUp}
+              onClick={() => {
+                dispatch(openModalSignUpAction());
+              }}
             >
               Đăng ký
             </span>
           </>
         }
-        visible={props.visibleModalSignIn}
-        onCancel={props.handleCancel}
+        visible={isOpenSignIn}
+        onCancel={() => {
+          dispatch(closeModalSignInAction());
+          setInfo({
+            taiKhoan: "",
+            matKhau: "",
+          });
+          setError({
+            taiKhoan: "",
+            matKhau: "",
+          });
+          resetError();
+        }}
       >
         <p className="text-red-500 text-center mb-3">
           {errorLogin ? errorLogin.response.data.content : ""}
@@ -119,6 +171,7 @@ export default function SignUp(props) {
               name="taiKhoan"
               onChange={handleChange}
               onBlur={handleOnBlur}
+              value={info.taiKhoan}
             />
 
             <span className="text-red-500">{error.taiKhoan}</span>
@@ -129,6 +182,7 @@ export default function SignUp(props) {
               name="matKhau"
               onChange={handleChange}
               onBlur={handleOnBlur}
+              value={info.matKhau}
             />
             <span className="text-red-500">{error.matKhau}</span>
           </Form.Item>

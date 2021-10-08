@@ -1,10 +1,13 @@
-import { BrowserRouter, Switch } from "react-router-dom";
-import { HomeRoute } from "./Router";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import Checkout from "./Page/Checkout";
+import { CheckoutRoute, HomeRoute } from "./Router";
+
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <HomeRoute />
+        {HomeRoute()}
+        {CheckoutRoute()}
       </Switch>
     </BrowserRouter>
   );

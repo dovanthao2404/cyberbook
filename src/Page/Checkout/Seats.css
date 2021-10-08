@@ -1,0 +1,34 @@
+.ghe {
+  width: 30px;
+  height: 30px;
+  /* display: flex;
+  justify-content: center; */
+
+  background: #3e515d;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.gheVip {
+  background: #f7b500;
+}
+
+.gheDangChon {
+  background: #44c020;
+}
+.gheDaDuocDat {
+  background: #ccc;
+  cursor: no-drop;
+}
+.gheBanDat {
+  background: rgb(26, 169, 169);
+  cursor: no-drop;
+}
+.gheNguoiKhacDangChon {
+  background: pink;
+  cursor: no-drop;
+}

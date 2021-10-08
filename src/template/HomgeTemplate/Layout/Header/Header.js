@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { signOutAction } from "../../../../redux/actions/ManagementUserActions";
 import { USER_LOGIN } from "../../../../utils/setting/config";
 import ModalLogin from "../ModalLogin/ModalLogin";
@@ -14,11 +15,14 @@ export default function Header(props) {
   };
   const handleRanderLogin = () => {
     const userLoginLocal = JSON.parse(localStorage.getItem(USER_LOGIN));
+
     let userLoginCurrent = {};
     if (userLoginLocal && Object.keys(userLoginLocal).length > 0) {
       userLoginCurrent = userLoginLocal;
     }
-    userLoginCurrent = userLogin;
+    if (Object.keys(userLogin).length > 0) {
+      userLoginCurrent = userLogin;
+    }
 
     if (Object.keys(userLoginCurrent).length > 0) {
       return (
@@ -26,11 +30,11 @@ export default function Header(props) {
           <NavLink to="/profile">
             <div className="flex mr-2 items-center">
               <img
-                style={{ borderRadius: "50%" }}
+                style={{ borderRadius: "50%", marginRight: 8 }}
                 src="https://picsum.photos/30/30"
                 alt={userLoginCurrent?.name}
               />
-              {userLoginCurrent.taiKhoan}
+              <p className="text-md"> {userLoginCurrent.hoTen}</p>
             </div>
           </NavLink>
           <NavLink to="/" className="ml-2" onClick={handleSingOut}>
@@ -67,36 +71,36 @@ export default function Header(props) {
         </NavLink>
         <ul className="items-stretch hidden space-x-3 lg:flex">
           <li className="flex">
-            <a
-              href="#showtimes"
+            <HashLink
+              to="/#showtimes"
               className="flex items-center px-4 -mb-1 border-b-2 border-transparent text-violet-600 border-violet-600"
             >
               Lịch chiếu
-            </a>
+            </HashLink>
           </li>
           <li className="flex">
-            <a
-              href="#cluster-cinema"
+            <HashLink
+              to="/#cluster-cinema"
               className="flex items-center px-4 -mb-1 border-b-2 border-transparent"
             >
               Cụm rạp
-            </a>
+            </HashLink>
           </li>
           <li className="flex">
-            <a
-              href="#news"
+            <HashLink
+              to="/#news"
               className="flex items-center px-4 -mb-1 border-b-2 border-transparent"
             >
               Tin Tức
-            </a>
+            </HashLink>
           </li>
           <li className="flex">
-            <a
-              href="#app"
+            <HashLink
+              to="/#app"
               className="flex items-center px-4 -mb-1 border-b-2 border-transparent"
             >
               Ứng dụng
-            </a>
+            </HashLink>
           </li>
         </ul>
         <div className="items-center flex-shrink-0 hidden lg:flex">

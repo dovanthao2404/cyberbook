@@ -9,7 +9,7 @@ export const getShowtimesByFilmIdAction = (maPhim) => {
   return async (dispatch) => {
     try {
       const result =
-        await managementCinemaServices.getShowtimesByFilmIdServices(maPhim);
+        await managementCinemaServices.getShowtimesFilmByIdServices(maPhim);
       dispatch({
         type: ManagementFilmType.SET_SHOWTIMES,
         payload: result.data.content,

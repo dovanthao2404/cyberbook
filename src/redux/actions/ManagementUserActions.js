@@ -1,7 +1,8 @@
 import { managementUserServices } from "../../Services/ManagementUserServices";
-import { TOKEN, USER_LOGIN } from "../../utils/setting/config";
+
 import {
   SET_ERROR_LOGIN,
+  SET_ERROR_SIGN_UP,
   SET_USER_LOGIN,
   SIGN_OUT,
 } from "../constants/ManagementUserConstants";
@@ -14,11 +15,24 @@ export const signInAction = (info) => {
       dispatch({ type: SET_ERROR_LOGIN, payload: null });
 
       // luu thong tin nguoi dung len localStorage
-      localStorage.setItem(USER_LOGIN, JSON.stringify(result.data.content));
-      localStorage.setItem(TOKEN, JSON.stringify(result.data.content[TOKEN]));
     } catch (error) {
       dispatch({ type: SET_ERROR_LOGIN, payload: error });
       dispatch({ type: SET_USER_LOGIN, payload: {} });
+    }
+  };
+};
+
+export const signUpaction = (info) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementUserServices.signUpServices(info);
+
+      if (result.status === 200) {
+        await dispatch(signInAction(result.data.content));
+        window.location.reload();
+      }
+    } catch (error) {
+      dispatch({ type: SET_ERROR_SIGN_UP, payload: error });
     }
   };
 };

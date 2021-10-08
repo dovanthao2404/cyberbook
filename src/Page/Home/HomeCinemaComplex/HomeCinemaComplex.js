@@ -3,7 +3,8 @@ import { Tabs, Collapse, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import "./HomeCinemaComplex.css";
 import moment from "moment";
-
+import { USER_LOGIN } from "./../../../utils/setting/config";
+import { openModalSignInAction } from "../../../redux/actions/ModalActions";
 const { TabPane } = Tabs;
 const { Panel } = Collapse;
 
@@ -117,9 +118,19 @@ export default function HomeCinemaComplex(props) {
                                         return (
                                           <Button
                                             onClick={() => {
-                                              props.history.push(
-                                                `/checkout/${lichChieu.maLichChieu}`
-                                              );
+                                              const userLogin =
+                                                localStorage.getItem(
+                                                  USER_LOGIN
+                                                );
+                                              if (userLogin) {
+                                                props.history.push(
+                                                  `/checkout/${lichChieu.maLichChieu}`
+                                                );
+                                              } else {
+                                                dispatch(
+                                                  openModalSignInAction()
+                                                );
+                                              }
                                             }}
                                             className="mr-2 mb-2 hover:border-green-800"
                                             style={{
@@ -131,7 +142,7 @@ export default function HomeCinemaComplex(props) {
                                           >
                                             {moment(
                                               lichChieu.ngayChieuGioChieu
-                                            ).format("hh:mm")}
+                                            ).format("DD/MM/YYYY - hh:mm")}
                                           </Button>
                                         );
                                       })}

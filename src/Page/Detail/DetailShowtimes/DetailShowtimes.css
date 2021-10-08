@@ -1,0 +1,7 @@
+#detailShowtime .ant-tabs-nav-list::-webkit-scrollbar {
+  height: 5px;
+  background-color: #e8e3e3;
+}
+#detailShowtime .ant-tabs-tab::before {
+  content: none;
+}
