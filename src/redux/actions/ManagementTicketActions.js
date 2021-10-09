@@ -1,5 +1,8 @@
 import { managementTicketServices } from "../../Services/ManagementTicketServices";
-import { SET_LIST_TICKET_ROOM } from "../constants/ManagementTicketConstants";
+import {
+  ADD_SEAT_SELECTED,
+  SET_LIST_TICKET_ROOM,
+} from "../constants/ManagementTicketConstants";
 
 export const getListTicketRoomAction = (maLichChieu) => {
   return async (dispatch) => {
@@ -9,5 +12,12 @@ export const getListTicketRoomAction = (maLichChieu) => {
       );
       dispatch({ type: SET_LIST_TICKET_ROOM, payload: result.data.content });
     } catch (error) {}
+  };
+};
+
+export const addSeatSelectedAction = (ghe) => {
+  return {
+    type: ADD_SEAT_SELECTED,
+    payload: ghe,
   };
 };

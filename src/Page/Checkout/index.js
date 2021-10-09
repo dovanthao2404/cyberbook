@@ -1,8 +1,13 @@
+import _ from "lodash";
+import moment from "moment";
 import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { getListTicketRoomAction } from "../../redux/actions/ManagementTicketActions";
+import {
+  addSeatSelectedAction,
+  getListTicketRoomAction,
+} from "../../redux/actions/ManagementTicketActions";
 import { signOutAction } from "../../redux/actions/ManagementUserActions";
 import { USER_LOGIN } from "../../utils/setting/config";
 import style from "./Checkout.module.css";
@@ -10,31 +15,56 @@ import "./Seats.css";
 
 export default function Checkout(props) {
   const dispatch = useDispatch();
-  const { listTicketRoom } = useSelector(
+  const { listTicketRoom, listSeatCurrentlySelected } = useSelector(
     (state) => state.managementTicketReducer
   );
+
   useEffect(() => {
     dispatch(getListTicketRoomAction(props.match.params.id));
   }, []);
+
   const userLoginLocal = JSON.parse(localStorage.getItem(USER_LOGIN));
+
   const renderListSeat = () => {
     return listTicketRoom?.danhSachGhe?.map((ghe, index) => {
       const classVip = ghe.loaiGhe === "Vip" ? "gheVip" : "";
-      const classOwn = ghe.taiKhoanNguoiDat ? "gheDaDuocDat" : "";
+      const classOtherBooking = ghe.taiKhoanNguoiDat ? "gheDaDuocDat" : "";
+
+      const classYouBooking =
+        ghe.taiKhoanNguoiDat === userLoginLocal.taiKhaon ? "gheBanDat" : "";
+      const classOtherSelecting = "";
+
+      const indexSelecting = listSeatCurrentlySelected?.findIndex(
+        (seatCurren) => seatCurren.maGhe === ghe.maGhe
+      );
+      const classSelecting = indexSelecting !== -1 ? "gheDangChon" : "";
+
       return (
         <Fragment key={ghe.maGhe}>
-          <span
+          <div
+            unselectable="on"
+            onMouseDown={() => false}
             key={ghe.maGhe}
-            className={`inline-block mb-1 ghe ${classVip} ${classOwn}`}
+            className={`inline-block ghe ${classVip} ${classOtherBooking} ${classSelecting} ${classYouBooking}`}
+            onClick={() => {
+              if (
+                !classOtherBooking &&
+                !classYouBooking &&
+                !classOtherSelecting
+              ) {
+                dispatch(addSeatSelectedAction(ghe));
+              }
+            }}
           >
             {ghe.tenGhe}
-          </span>
+          </div>
 
           {(index + 1) % 16 === 0 ? <br /> : ""}
         </Fragment>
       );
     });
   };
+
   return (
     <>
       <section
@@ -112,41 +142,44 @@ export default function Checkout(props) {
               </div>
               <div className="flex justify-center px-36">
                 <div className="w-full text-center">
-                  <button style={{ margin: "auto" }} className="ghe "></button>
-                  <p className="text-xs">Ghế </p>
+                  <button
+                    style={{ margin: "auto" }}
+                    className="ghe ghe-guide "
+                  ></button>
+                  <p className="text-xs">Ghế thường </p>
                 </div>
                 <div className="w-full text-center">
                   <button
                     style={{ margin: "auto" }}
-                    className="ghe gheVip"
+                    className="ghe ghe-guide gheVip"
                   ></button>
                   <p className="text-xs">Ghế VIP</p>
                 </div>
                 <div className="w-full text-center">
                   <button
                     style={{ margin: "auto" }}
-                    className="ghe gheDangChon"
+                    className="ghe ghe-guide gheDangChon"
                   ></button>
                   <p className="text-xs">Ghế Đang Chọn</p>
                 </div>
                 <div className="w-full text-center">
                   <button
                     style={{ margin: "auto" }}
-                    className="ghe gheNguoiKhacDangChon"
+                    className="ghe ghe-guide gheNguoiKhacDangChon"
                   ></button>
                   <p className="text-xs">Ghế Người Khác Đang Chọn</p>
                 </div>
                 <div className="w-full text-center">
                   <button
                     style={{ margin: "auto" }}
-                    className="ghe gheDaDuocDat"
+                    className="ghe ghe-guide gheDaDuocDat"
                   ></button>
                   <p className="text-xs">Ghế Người Khác Đã Đặt</p>
                 </div>
                 <div className="w-full text-center">
                   <button
                     style={{ margin: "auto" }}
-                    className="ghe gheBanDat"
+                    className="ghe ghe-guide gheBanDat"
                   ></button>
                   <p className="text-xs">Ghế Bạn Đặt</p>
                 </div>
@@ -184,74 +217,83 @@ export default function Checkout(props) {
                     className="font-bold text-center"
                     style={{ color: "#44c020" }}
                   >
-                    0 đ
+                    {listSeatCurrentlySelected.reduce((totalMoney, seat) => {
+                      return totalMoney + seat.giaVe;
+                    }, 0)}{" "}
+                    đ
                   </h2>
                 </div>
                 <div
                   className="py-4"
                   style={{ borderBottom: "1px dashed #ccc" }}
                 >
-                  <p className="text-xl  font-bold">Ten phim</p>
+                  <p className="text-xl  font-bold">
+                    {listTicketRoom?.thongTinPhim?.tenPhim}
+                  </p>
                 </div>
                 <div
                   className="py-4 flex justify-between"
                   style={{ borderBottom: "1px dashed #ccc" }}
                 >
                   <p>Ngày chiếu giờ chiếu</p>
-                  <p className="font-bold">14/12/2003</p>
+                  <p className="font-bold">
+                    {moment(listTicketRoom?.thongTinPhim?.ngayChieu).format(
+                      "DD/MM/YYYY "
+                    ) +
+                      " - " +
+                      listTicketRoom?.thongTinPhim?.gioChieu}
+                  </p>
                 </div>
                 <div
                   className="py-4 flex justify-between"
                   style={{ borderBottom: "1px dashed #ccc" }}
                 >
                   <p>Cụm rạp</p>
-                  <p className="font-bold">Lotte gò vấp</p>
+                  <p className="font-bold">
+                    {listTicketRoom?.thongTinPhim?.tenCumRap}
+                  </p>
                 </div>
                 <div
                   className="py-4 flex justify-between"
                   style={{ borderBottom: "1px dashed #ccc" }}
                 >
                   <p>Rạp</p>
-                  <p className="font-bold">Rạp 1</p>
+                  <p className="font-bold">
+                    {" "}
+                    {listTicketRoom?.thongTinPhim?.tenRap}
+                  </p>
                 </div>
                 <div
                   className="py-4 flex justify-between"
                   style={{ borderBottom: "1px dashed #ccc" }}
                 >
                   <p className="text-red-400" style={{ width: "75%" }}>
-                    Vui vòng chọn ghế Vui vòng chọn ghế Vui vòng chọn ghế Vui
-                    vòng chọn ghế Vui vòng chọn ghế Vui vòng chọn ghế
+                    {listSeatCurrentlySelected.length
+                      ? _.orderBy(listSeatCurrentlySelected, "maGhe").reduce(
+                          (seatTotal, seat) => {
+                            return seatTotal + seat.tenGhe + ", ";
+                          },
+                          "Ghế "
+                        )
+                      : "Vui lòng chọn ghế"}
                   </p>
                   <p
                     style={{ color: "#44c020", width: "25%", textAlign: "end" }}
                     className="font-bold hover:bg-green-600"
                   >
-                    0 đ
+                    {listSeatCurrentlySelected.reduce((totalMoney, seat) => {
+                      return totalMoney + seat.giaVe;
+                    }, 0)}{" "}
+                    đ
                   </p>
                 </div>
-                {/* <div>
-                  <table className="table">
-                    <tbody>
-                      <tr>
-                        <td>sadfsadf</td>
-                        <td>sadfsadf</td>
-                      </tr>
-                      <tr>
-                        <td>sadfsadf</td>
-                        <td>sadfsadf</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div> */}
-                {/* <div
-                  className="py-4 flex justify-between"
-                  style={{ borderBottom: "1px dashed #ccc" }}
-                >
-                  <h3>Hình thức thanh toán</h3>
-                </div> */}
               </div>
               <div
-                className={`text-center text-white absolute bottom-0 right-0 py-4 cursor-pointer ${style["salary"]} ${style["disabled"]}`}
+                className={`text-center text-white absolute bottom-0 right-0 py-4 cursor-pointer ${
+                  style["salary"]
+                } ${
+                  listSeatCurrentlySelected.length > 0 ? "" : style["disabled"]
+                }`}
                 unselectable="on"
                 onMouseDown={() => false}
               >
