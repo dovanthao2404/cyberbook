@@ -56,6 +56,19 @@ export const deleteFilmAction = (maPhim) => {
   };
 };
 
+export const updateFilmAction = (maPhim) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementFilmServices.updateFilmServices(maPhim);
+      if (result.status === 200) {
+        dispatch(updateSuccessAction(true));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
 export const getInfoFilmAction = (maPhim) => {
   return async (dispatch) => {
     try {
@@ -91,6 +104,12 @@ export const filmFailedAction = (error) => {
 export const addSuccessAction = (value) => {
   return {
     type: ManagementFilmType.SET_ADD_FILM_SUCCESS,
+    payload: value,
+  };
+};
+export const updateSuccessAction = (value) => {
+  return {
+    type: ManagementFilmType.SET_UPDATE_FILM_SUCCESS,
     payload: value,
   };
 };

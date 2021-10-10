@@ -49,6 +49,7 @@ export const signInAdminAction = (info, history) => {
 };
 
 export const signUpaction = (info) => {
+  console.log(info);
   return async (dispatch) => {
     try {
       const result = await managementUserServices.signUpServices(info);
@@ -63,15 +64,18 @@ export const signUpaction = (info) => {
   };
 };
 
-export const getInfoUserLoginDetailAction = () => {
-  const userLogin = JSON.parse(localStorage.getItem(USER_LOGIN));
-  console.log(userLogin);
-  return async (dispatch) => {
+export const getInfoUserLoginDetailAction = (history) => {
+  return async (dispatch, getState) => {
+    const { userLogin } = getState().managementUserReducer;
+
+    if (Object.keys(userLogin).length === 0) history.push("/");
+
     try {
       const result =
         await managementUserServices.getInfoUserLoginDetailServices(
           userLogin.taiKhoan
         );
+      console.log(result);
       dispatch({ type: SET_USER_LOGIN_DETAIL, payload: result.data.content });
     } catch (error) {
       console.log(error);

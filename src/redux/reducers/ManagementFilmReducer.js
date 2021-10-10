@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   isLoading: false,
   addFilm: false,
+  updateFilm: false,
 };
 
 const managementFilmReducer = (state = initialState, { type, payload }) => {
@@ -53,6 +54,9 @@ const managementFilmReducer = (state = initialState, { type, payload }) => {
       return { ...state };
     case ManagementFilmType.SET_ADD_FILM_SUCCESS:
       state.addFilm = payload;
+      return { ...state };
+    case ManagementFilmType.SET_UPDATE_FILM_SUCCESS:
+      state.updateFilm = payload;
       return { ...state };
     default:
       return state;

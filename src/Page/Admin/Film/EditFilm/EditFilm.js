@@ -7,6 +7,8 @@ import {
   addFilmAction,
   addSuccessAction,
   getInfoFilmAction,
+  updateFilmAction,
+  updateSuccessAction,
 } from "../../../../redux/actions/ManagementFilmActions";
 import HandleSuccess from "../../../../components/HandleSuccess/HandleSuccess";
 import Loading from "../../../../components/Loading/Loading";
@@ -18,22 +20,22 @@ const EditFilm = (props) => {
 
   const filmReducer = useSelector((state) => state.managementFilmReducer);
 
-  const addFilm = filmReducer.addFilm;
+  const updateFilm = filmReducer.updateFilm;
   const infoFilmState = filmReducer.infoFilm;
   useEffect(() => {
     dispatch(getInfoFilmAction(props.match.params.id));
   }, []);
   const [infoFilm, setInfoFilm] = useState({
-    tenPhim: "",
-    trailer: "",
-    moTa: "",
-    maNhom: GROUP_ID,
-    ngayKhoiChieu: "",
-    sapChieu: false,
-    dangChieu: false,
-    hot: false,
-    danhGia: 1,
-    hinhAnh: {},
+    tenPhim: infoFilmState?.tenPhim,
+    trailer: infoFilmState?.trailer,
+    moTa: infoFilmState?.moTa,
+    maNhom: infoFilmState?.maNhom,
+    ngayKhoiChieu: infoFilmState?.ngayKhoiChieu,
+    sapChieu: infoFilmState?.sapChieu,
+    dangChieu: infoFilmState?.dangChieu,
+    hot: infoFilmState?.hot,
+    danhGia: infoFilmState?.danhGia,
+    hinhAnh: null,
   });
 
   const handleChange = (e) => {
@@ -73,19 +75,25 @@ const EditFilm = (props) => {
 
   const hanldeSubmit = async () => {
     const formData = new FormData();
-
+    // consol
     for (let key in infoFilm) {
       if (key !== "hinhAnh") {
-        await formData.append(key, infoFilm[key]);
-      } else {
+        if (!infoFilm[key]) {
+          await formData.append(key, infoFilmState[key]);
+        } else {
+          await formData.append(key, infoFilm[key]);
+        }
+      } else if (infoFilm[key] !== null) {
         await formData.append("File", infoFilm[key], infoFilm[key].name);
       }
     }
-    await dispatch(addFilmAction(formData));
+    await formData.append("maPhim", infoFilmState.maPhim);
+
+    await dispatch(updateFilmAction(formData));
   };
 
-  const handleAddSuccess = () => {
-    dispatch(addSuccessAction(false));
+  const handleUpdateSuccess = () => {
+    dispatch(updateSuccessAction(false));
     window.location.reload();
   };
 
@@ -103,7 +111,7 @@ const EditFilm = (props) => {
             <Input
               name="tenPhim"
               onChange={handleChange}
-              defaultValue={infoFilmState.tenPHim}
+              defaultValue={infoFilmState.tenPhim}
             />
           </Form.Item>
           <Form.Item label="Trailer">
@@ -118,6 +126,11 @@ const EditFilm = (props) => {
             <DatePicker
               name="ngayKhoiChieu"
               onChange={handleChangeOnlyGetValue("ngayKhoiChieu")}
+              defaultValue={moment(
+                moment(infoFilmState.ngayKhoiChieu).format("DD/MM/YYYY"),
+                "DD/MM/YYYY"
+              )}
+              format="DD/MM/YYYY"
             />
           </Form.Item>
           <Form.Item label="Mô tả">
@@ -131,16 +144,22 @@ const EditFilm = (props) => {
             <Switch
               onChange={handleChangeOnlyGetValue("sapChieu")}
               name="sapChieu"
+              defaultChecked={infoFilmState.sapChieu}
             />
           </Form.Item>
           <Form.Item label="Đang chiếu">
             <Switch
               onChange={handleChangeOnlyGetValue("dangChieu")}
               name="dangChieu"
+              defaultChecked={infoFilmState.dangChieu}
             />
           </Form.Item>
           <Form.Item label="Hot">
-            <Switch onChange={handleChangeOnlyGetValue("hot")} name="hot" />
+            <Switch
+              onChange={handleChangeOnlyGetValue("hot")}
+              name="hot"
+              defaultChecked={infoFilmState.hot}
+            />
           </Form.Item>
           <Form.Item label="Đánh giá">
             <InputNumber
@@ -148,26 +167,27 @@ const EditFilm = (props) => {
               max={10}
               name="danhGia"
               onChange={handleChangeOnlyGetValue("danhGia")}
+              defaultValue={infoFilmState.danhGia}
             />
           </Form.Item>
           <Form.Item label="Hình ảnh">
             <div>
               <input type="file" name="hinhAnh" onChange={handleChangeFile} />
               <img
-                style={{ width: "40%", height: "auto" }}
-                src={img}
+                style={{ width: "180px", height: "auto" }}
+                src={img ? img : infoFilmState.hinhAnh}
                 alt={img}
               />
             </div>
           </Form.Item>
           <Form.Item label="Button">
             <Button htmlType="submit" onSubmit={hanldeSubmit}>
-              Thêm Phim
+              Cập nhật
             </Button>
           </Form.Item>
         </Form>
-        <div className={`${addFilm ? "block" : "hidden"}`}>
-          {HandleSuccess("Thêm Phim Thành Công", handleAddSuccess)()}
+        <div className={`${updateFilm ? "block" : "hidden"}`}>
+          {HandleSuccess("Cập nhật phim thành công", handleUpdateSuccess)()}
         </div>
       </>
     );

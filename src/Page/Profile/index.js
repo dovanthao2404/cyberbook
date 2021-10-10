@@ -3,7 +3,7 @@ import { Tabs } from "antd";
 
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { GROUP_ID } from "../../utils/setting/config";
+import { GROUP_ID, USER_LOGIN } from "../../utils/setting/config";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getInfoUserLoginDetailAction,
@@ -18,11 +18,13 @@ import HandleSuccess from "../../components/HandleSuccess/HandleSuccess";
 
 const { TabPane } = Tabs;
 
-export default function Profile() {
+export default function Profile(props) {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(getInfoUserLoginDetailAction());
+    dispatch(getInfoUserLoginDetailAction(props.history));
   }, []);
+
   const { errorLogin, userLoginDetail, updateSuccess } = useSelector(
     (state) => state.managementUserReducer
   );
@@ -65,6 +67,8 @@ export default function Profile() {
   };
   if (Object.keys(userLoginDetail).length > 0) {
     // return <div style={{ height: 1000 }}>hihi</div>;
+    const userLocal = JSON.parse(localStorage.getItem(USER_LOGIN));
+    // console.log(userLocal);
     return (
       <div id="profile" style={{ paddingTop: 80, paddingBottom: 40 }}>
         <div className="container ">

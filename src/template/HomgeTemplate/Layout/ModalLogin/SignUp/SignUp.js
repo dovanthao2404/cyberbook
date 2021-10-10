@@ -32,7 +32,7 @@ const SignUp = () => {
     email: Yup.string()
       .email("Email không hợp lệ")
       .required("Email không được để trống"),
-    soDt: Yup.string()
+    soDT: Yup.string()
       .required("Số điện thoại không được để trống")
       .matches(
         /^(84|0[3|5|7|8|9])+([0-9]{8})\b$/,
@@ -72,7 +72,7 @@ const SignUp = () => {
             </span>
             <span
               className=" text-blue-400 cursor-pointer"
-              onClick={openModalSignUpAction()}
+              onClick={() => dispatch(openModalSignUpAction())}
             >
               Đăng ký
             </span>
@@ -87,7 +87,7 @@ const SignUp = () => {
           initialValues={{
             taiKhoan: "",
             hoTen: "",
-            soDt: "",
+            soDT: "",
             email: "",
             matKhau: "",
             maNhom: GROUP_ID,
@@ -95,6 +95,10 @@ const SignUp = () => {
           }}
           validationSchema={SignupSchema}
           onSubmit={(values) => {
+            // if (values.reMatKhau) {
+            //   delete values.reMatKhau;
+            // }
+            // console.log(values);
             dispatch(signUpaction(values));
           }}
         >
@@ -137,10 +141,10 @@ const SignUp = () => {
                   <Field
                     className=" w-full mb-2 p-2"
                     style={{ border: "1px solid #d9d9d9", outline: "none" }}
-                    name="soDt"
+                    name="soDT"
                   />
-                  {errors.soDt && touched.soDt ? (
-                    <div className="text-red-500">{errors.soDt}</div>
+                  {errors.soDT && touched.soDT ? (
+                    <div className="text-red-500">{errors.soDT}</div>
                   ) : null}
                 </div>
               </div>

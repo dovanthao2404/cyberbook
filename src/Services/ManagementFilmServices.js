@@ -20,6 +20,9 @@ class ManagementFilmServices {
   getInfoFilmServices = (maPhim) => {
     return api.get(`/api/QuanLyPhim/LayThongTinPhim?MaPhim=${maPhim}`);
   };
+  updateFilmServices = (formData) => {
+    return api.post(`/api/QuanLyPhim/CapNhatPhimUpload`, formData);
+  };
 }
 
 export const managementFilmServices = new ManagementFilmServices();
