@@ -2,6 +2,7 @@ import Dashboard from "../Page/Admin/Dashboard/Dashboard";
 import AddFilm from "../Page/Admin/Film/AddFilm/AddFilm";
 import EditFilm from "../Page/Admin/Film/EditFilm/EditFilm";
 import ManagementFilm from "../Page/Admin/Film/ManagementFim/ManagementFilm";
+import Showtimes from "../Page/Admin/Film/Showtimes/Showtimes";
 import ManagementUser from "../Page/Admin/ManagementUser/ManagementUser";
 import AddUser from "../Page/Admin/User/AddUser/AddUser";
 import Checkout from "../Page/Checkout";
@@ -75,6 +76,11 @@ const ListAdmin = [
     Component: EditFilm,
     exact: false,
     path: "/admin/edit-film/:id",
+  },
+  {
+    Component: Showtimes,
+    exact: false,
+    path: "/admin/showtimes/:id",
   },
 ];
 

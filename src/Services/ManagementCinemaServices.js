@@ -9,10 +9,20 @@ class ManagementCinemaServices {
     return api.get(`/api/QuanLyRap/LayThongTinHeThongRap`);
   };
   getInfoCinemaSystemByIdServices = (maHeThongRap) => {
+    if (maHeThongRap) {
+      return api.get(
+        `/api/QuanLyRap/LayThongTinLichChieuHeThongRap?maHeThongRap=${maHeThongRap}&maNhom=${GROUP_ID}`
+      );
+    }
     return api.get(
       `/api/QuanLyRap/LayThongTinLichChieuHeThongRap?maNhom=${GROUP_ID}`
     );
   };
+
+  createShowtimeServices = (infoShowtime) => {
+    return api.post(`/api/QuanLyDatVe/TaoLichChieu`, infoShowtime);
+  };
+
   // getInfoShowtimesFilmById = maPhim;
 }
 

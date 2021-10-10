@@ -45,3 +45,18 @@ export const getInfoCinemaSystemByIdAction = (maHeThongRap = "") => {
     }
   };
 };
+
+export const createShowtimeAction = (infoShowtime) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementCinemaServices.createShowtimeServices(
+        infoShowtime
+      );
+      if (result.status === 200) {
+        window.location.reload();
+      }
+    } catch (error) {
+      return;
+    }
+  };
+};

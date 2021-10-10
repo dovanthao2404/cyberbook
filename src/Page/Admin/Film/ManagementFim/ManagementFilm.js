@@ -78,7 +78,9 @@ export default function ManagementFilm() {
             }}
             className="text-xl text-red-500 cursor-pointer mx-1"
           />
-          <CalendarOutlined className="text-xl text-blue-500 cursor-pointer mx-1" />
+          <NavLink to={`/admin/showtimes/${maPhim}`}>
+            <CalendarOutlined className="text-xl text-blue-500 cursor-pointer mx-1" />
+          </NavLink>
         </>
       ),
     },
