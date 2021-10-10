@@ -6,6 +6,9 @@ class ManagementTicketServices {
       `/api/QuanLyDatVe/LayDanhSachPhongVe?MaLichChieu=${maLichChieu}`
     );
   };
+  bookTicketServices = (dataTicket) => {
+    return api.post(`/api/QuanLyDatVe/DatVe`, dataTicket);
+  };
 }
 
 export const managementTicketServices = new ManagementTicketServices();

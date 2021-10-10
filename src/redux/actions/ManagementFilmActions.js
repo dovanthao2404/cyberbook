@@ -33,6 +33,43 @@ export const getListFilmAction = () => {
   };
 };
 
+export const addFilmAction = (fromData) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementFilmServices.addFilmServices(fromData);
+      if (result.status === 200) {
+        dispatch(addSuccessAction(true));
+      }
+    } catch (error) {}
+  };
+};
+
+export const deleteFilmAction = (maPhim) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementFilmServices.deleteFilmServices(maPhim);
+      if (result.status === 200) {
+        console.log(result);
+        dispatch(getListFilmAction());
+      }
+    } catch (error) {}
+  };
+};
+
+export const getInfoFilmAction = (maPhim) => {
+  return async (dispatch) => {
+    try {
+      const result = await managementFilmServices.getInfoFilmServices(maPhim);
+      if (result.status === 200) {
+        dispatch({
+          type: ManagementFilmType.SET_INFO_FILM,
+          payload: result.data.content,
+        });
+      }
+    } catch (error) {}
+  };
+};
+
 export const filmRequestAction = () => {
   return {
     type: ManagementFilmType.FILM_REQUEST,
@@ -48,5 +85,12 @@ export const filmFailedAction = (error) => {
   return {
     type: ManagementFilmType.FILM_FAILED,
     payload: error,
+  };
+};
+
+export const addSuccessAction = (value) => {
+  return {
+    type: ManagementFilmType.SET_ADD_FILM_SUCCESS,
+    payload: value,
   };
 };

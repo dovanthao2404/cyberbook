@@ -7,7 +7,7 @@ import { NavHashLink } from "react-router-hash-link";
 
 export default function DetailMainTop() {
   const { showtimes } = useSelector((state) => state.managementFilmReducer);
-  console.log(showtimes);
+
   return (
     <div style={{ marginTop: 64, position: "relative" }}>
       <div>

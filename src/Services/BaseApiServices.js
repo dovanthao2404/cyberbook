@@ -8,6 +8,7 @@ const api = axios.create({
 api.interceptors.request.use(
   function (config) {
     const toKenUser = "Bearer " + localStorage.getItem(TOKEN);
+
     config.headers = {
       ...config.headers,
       TokenCybersoft: TOKEN_CYBERSOFT,

@@ -7,6 +7,14 @@ class ManagementUserServices {
   signUpServices = (info) => {
     return api.post(`/api/QuanLyNguoiDung/DangKy`, info);
   };
+  getInfoUserLoginDetailServices = (taiKhoan) => {
+    return api.post(
+      `/api/QuanLyNguoiDung/LayThongTinNguoiDung?taiKhoan=${taiKhoan}`
+    );
+  };
+  updateInfoUserServices = (infoUser) => {
+    return api.post(`/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`, infoUser);
+  };
 }
 
 export const managementUserServices = new ManagementUserServices();

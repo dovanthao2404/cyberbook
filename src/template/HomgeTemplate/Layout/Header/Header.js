@@ -27,7 +27,7 @@ export default function Header(props) {
     if (Object.keys(userLoginCurrent).length > 0) {
       return (
         <div className="flex items-center">
-          <NavLink to="/profile">
+          <NavLink to={`/profile/${userLoginCurrent.taiKhoan}`}>
             <div className="flex mr-2 items-center">
               <img
                 style={{ borderRadius: "50%", marginRight: 8 }}

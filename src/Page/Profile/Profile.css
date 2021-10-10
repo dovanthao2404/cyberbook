@@ -1,0 +1,7 @@
+#profile .ant-tabs-content {
+  overflow: unset;
+  max-height: unset;
+}
+#profile .ant-tabs {
+  overflow: unset;
+}

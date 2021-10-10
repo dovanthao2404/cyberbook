@@ -10,6 +10,7 @@ const initialState = {
   infoFilm: {},
   error: null,
   isLoading: false,
+  addFilm: false,
 };
 
 const managementFilmReducer = (state = initialState, { type, payload }) => {
@@ -49,6 +50,9 @@ const managementFilmReducer = (state = initialState, { type, payload }) => {
     case ManagementFilmType.FILM_FAILED:
       state.error = payload;
       state.isLoading = false;
+      return { ...state };
+    case ManagementFilmType.SET_ADD_FILM_SUCCESS:
+      state.addFilm = payload;
       return { ...state };
     default:
       return state;

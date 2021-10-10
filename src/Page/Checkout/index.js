@@ -4,9 +4,16 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import HandleSuccess from "../../components/HandleSuccess/HandleSuccess";
+import Loading from "../../components/Loading/Loading";
+import { connection } from "../../index";
 import {
+  addSeatOtherSelectedAction,
   addSeatSelectedAction,
+  bookTicketAction,
+  clearTicketReducerAction,
   getListTicketRoomAction,
+  setStatusBookingAction,
 } from "../../redux/actions/ManagementTicketActions";
 import { signOutAction } from "../../redux/actions/ManagementUserActions";
 import { USER_LOGIN } from "../../utils/setting/config";
@@ -15,15 +22,66 @@ import "./Seats.css";
 
 export default function Checkout(props) {
   const dispatch = useDispatch();
-  const { listTicketRoom, listSeatCurrentlySelected } = useSelector(
-    (state) => state.managementTicketReducer
-  );
-
-  useEffect(() => {
-    dispatch(getListTicketRoomAction(props.match.params.id));
-  }, []);
+  const {
+    listTicketRoom,
+    listSeatCurrentlySelected,
+    listSeatOtherSelected,
+    bookingSuccess,
+    isLoading,
+  } = useSelector((state) => state.managementTicketReducer);
 
   const userLoginLocal = JSON.parse(localStorage.getItem(USER_LOGIN));
+
+  const handleConnectToServerWhileExitPage = async () => {
+    try {
+      await connection.invoke(
+        "datGhe",
+        userLoginLocal.taiKhoan,
+        "[]",
+        props.match.params.id
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleConnectToServerWhileExitPage();
+    dispatch(getListTicketRoomAction(props.match.params.id));
+    try {
+      connection.on("loadDanhSachGheDaDat", (dsGheDaDat) => {
+        console.log(dsGheDaDat);
+        const listUserBooking = dsGheDaDat.filter((user) => {
+          return user.taiKhoan !== userLoginLocal.taiKhoan;
+        });
+        const listSeatOtherSelectedServer = JSON.parse(
+          listUserBooking.reduce(
+            (listSelect, user) => listSelect.concat(user.danhSachGhe),
+            []
+          )
+        );
+        dispatch(addSeatOtherSelectedAction(listSeatOtherSelectedServer));
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      handleConnectToServerWhileExitPage();
+      dispatch(clearTicketReducerAction());
+    };
+  }, []);
+
+  const hanldeBooking = () => {
+    const dataTicket = {};
+    dataTicket.maLichChieu = props.match.params.id;
+    dataTicket.danhSachVe = listSeatCurrentlySelected.map((ghe) => {
+      return { maGhe: ghe.maGhe, giaVe: ghe.giaVe };
+    });
+    dispatch(bookTicketAction(dataTicket));
+  };
 
   const renderListSeat = () => {
     return listTicketRoom?.danhSachGhe?.map((ghe, index) => {
@@ -31,13 +89,18 @@ export default function Checkout(props) {
       const classOtherBooking = ghe.taiKhoanNguoiDat ? "gheDaDuocDat" : "";
 
       const classYouBooking =
-        ghe.taiKhoanNguoiDat === userLoginLocal.taiKhaon ? "gheBanDat" : "";
-      const classOtherSelecting = "";
+        ghe.taiKhoanNguoiDat === userLoginLocal.taiKhoan ? "gheBanDat" : "";
 
       const indexSelecting = listSeatCurrentlySelected?.findIndex(
         (seatCurren) => seatCurren.maGhe === ghe.maGhe
       );
       const classSelecting = indexSelecting !== -1 ? "gheDangChon" : "";
+
+      const indexOtherSelecting = listSeatOtherSelected?.findIndex(
+        (seatCurren) => seatCurren.maGhe === ghe.maGhe
+      );
+      const classOtherSelecting =
+        indexOtherSelecting !== -1 ? "gheNguoiKhacDangChon" : "";
 
       return (
         <Fragment key={ghe.maGhe}>
@@ -45,14 +108,20 @@ export default function Checkout(props) {
             unselectable="on"
             onMouseDown={() => false}
             key={ghe.maGhe}
-            className={`inline-block ghe ${classVip} ${classOtherBooking} ${classSelecting} ${classYouBooking}`}
+            className={`inline-block ghe ${classVip} ${classOtherBooking} ${classSelecting} ${classYouBooking} ${classOtherSelecting}`}
             onClick={() => {
               if (
                 !classOtherBooking &&
                 !classYouBooking &&
                 !classOtherSelecting
               ) {
-                dispatch(addSeatSelectedAction(ghe));
+                dispatch(
+                  addSeatSelectedAction(
+                    userLoginLocal.taiKhoan,
+                    props.match.params.id,
+                    ghe
+                  )
+                );
               }
             }}
           >
@@ -63,6 +132,14 @@ export default function Checkout(props) {
         </Fragment>
       );
     });
+  };
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const handleCheckouSuccess = () => {
+    dispatch(setStatusBookingAction(false));
+    props.history.push("/");
   };
 
   return (
@@ -279,7 +356,7 @@ export default function Checkout(props) {
                   </p>
                   <p
                     style={{ color: "#44c020", width: "25%", textAlign: "end" }}
-                    className="font-bold hover:bg-green-600"
+                    className="font-bold hover:text-green-600"
                   >
                     {listSeatCurrentlySelected.reduce((totalMoney, seat) => {
                       return totalMoney + seat.giaVe;
@@ -296,6 +373,7 @@ export default function Checkout(props) {
                 }`}
                 unselectable="on"
                 onMouseDown={() => false}
+                onClick={hanldeBooking}
               >
                 {" "}
                 THANH TOÁN
@@ -304,6 +382,9 @@ export default function Checkout(props) {
           </div>
         </div>
       </section>
+      <div className={`${bookingSuccess ? "block" : "hidden"}`}>
+        {HandleSuccess("Bạn đã đặt vé thành công", handleCheckouSuccess)()}
+      </div>
     </>
   );
 }

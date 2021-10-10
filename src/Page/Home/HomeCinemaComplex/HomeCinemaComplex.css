@@ -31,8 +31,8 @@
   content: none;
 }
 
-.ant-tabs-nav-list,
-.ant-tabs-content {
+#cluster-cinema .ant-tabs-nav-list,
+#cluster-cinema .ant-tabs-content {
   max-height: 468px;
   overflow: auto;
 }

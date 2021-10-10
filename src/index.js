@@ -12,23 +12,27 @@ import "./index.css";
 import * as signalR from "@aspnet/signalr";
 import { DOMAIN } from "./utils/setting/config";
 
-let connection = new signalR.HubConnectionBuilder()
+export const connection = new signalR.HubConnectionBuilder()
   .withUrl(`${DOMAIN}/DatVeHub`)
+  .configureLogging(signalR.LogLevel.Information)
   .build();
-
-connection
-  .start()
-  .then(() => {
-    ReactDOM.render(
-      <Provider store={store}>
-        <App />
-      </Provider>,
-      document.getElementById("root")
-    );
-  })
-  .catch(() => {
-    console.log("that bai");
-  });
+try {
+  connection
+    .start()
+    .then(() => {
+      ReactDOM.render(
+        <Provider store={store}>
+          <App />
+        </Provider>,
+        document.getElementById("root")
+      );
+    })
+    .catch(() => {
+      console.log("that bai");
+    });
+} catch (error) {
+  console.log(error);
+}
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

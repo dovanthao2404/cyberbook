@@ -1,14 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Redirect, Route } from "react-router";
 import { USER_LOGIN } from "../../utils/setting/config";
 
 export default function CheckoutTemplate({ Component, ...props }) {
-  const user = localStorage.getItem(USER_LOGIN);
+  const { userLogin } = useSelector((state) => state.managementUserReducer);
 
-  if (!user) {
+  if (Object.keys(userLogin).length === 0) {
     alert("Vui lòng đăng nhập");
-    return <Redirect back />;
+    return <Redirect to="/" />;
   }
+
   return (
     <Route
       {...props}

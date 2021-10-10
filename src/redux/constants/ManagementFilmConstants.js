@@ -6,3 +6,4 @@ export const SET_LIST_BANNER = "@film/SET_LIST_BANNER";
 export const SET_LIST_FILM = "@film/SET_LIST_FILM";
 export const SET_INFO_FILM = "@film/SET_INFO_FILM";
 export const SET_SHOWTIMES = "@film/SET_SHOWTIMES";
+export const SET_ADD_FILM_SUCCESS = "@film/SET_ADD_FILM_SUCCESS";

@@ -5,3 +5,8 @@
 #detailShowtime .ant-tabs-tab::before {
   content: none;
 }
+#detailShowtime .ant-tabs-nav-list,
+#detailShowtime .ant-tabs-content {
+  max-height: 468px;
+  overflow: auto;
+}
